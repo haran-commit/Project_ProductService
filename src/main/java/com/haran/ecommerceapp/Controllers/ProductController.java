@@ -1,6 +1,8 @@
 package com.haran.ecommerceapp.Controllers;
 import com.haran.ecommerceapp.DTOs.CreateProductRequestDto;
+import com.haran.ecommerceapp.DTOs.ErrorDTO;
 import com.haran.ecommerceapp.DTOs.FakeStoreProductDto;
+import com.haran.ecommerceapp.Exceptions.ProductNotFoundException;
 import com.haran.ecommerceapp.models.Category;
 import com.haran.ecommerceapp.models.Product;
 import com.haran.ecommerceapp.services.FakeStoreProductService;
@@ -38,7 +40,7 @@ public class ProductController {
     }
 
     @GetMapping("/products/{ID}")
-    public Product getProductDetails(@PathVariable("ID") Long ProductID){
+    public Product getProductDetails(@PathVariable("ID") Long ProductID) throws ProductNotFoundException {
         return productService.getSingleProduct(ProductID);
     }
 
@@ -46,8 +48,10 @@ public class ProductController {
     public ResponseEntity<List<Product>> getAllProduct(){
 
         List<Product> products = productService.getProducts();
+
+//        throw new RuntimeException();
         ResponseEntity<List<Product>> response = new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
-        return response;
+       return response;
 
     }
 
@@ -71,4 +75,16 @@ public class ProductController {
     public List<Product> getAllCategoryWiseProduct(@PathVariable("jew") String jew){
             return productService.getAllCategoryWiseProduct(jew);
     }
+
+//    @ExceptionHandler(ProductNotFoundException.class)
+//    public ResponseEntity<ErrorDTO> handleProductNotFound(ProductNotFoundException exception){
+//
+//        ErrorDTO errorDTO = new ErrorDTO();
+//        errorDTO.setMessage(exception.getMessage());
+//
+//        return new ResponseEntity<>(errorDTO,HttpStatus.NOT_FOUND);
+//    }
+
+    //this is local advice which is limited with only this controller
+    // you can have global advice
 }

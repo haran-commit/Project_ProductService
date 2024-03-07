@@ -3,6 +3,7 @@ package com.haran.ecommerceapp.services;
 import com.haran.ecommerceapp.DTOs.CreateProductRequestDto;
 import com.haran.ecommerceapp.DTOs.FakeStoreCategoryDto;
 import com.haran.ecommerceapp.DTOs.FakeStoreProductDto;
+import com.haran.ecommerceapp.Exceptions.ProductNotFoundException;
 import com.haran.ecommerceapp.models.Category;
 import com.haran.ecommerceapp.models.Product;
 import org.springframework.http.ResponseEntity;
@@ -22,13 +23,17 @@ public class FakeStoreProductService implements ProductService{
         this.restTemplate = restTemplate;
     }
     @Override
-    public Product getSingleProduct(Long productId) {
+    public Product getSingleProduct(Long productId) throws ProductNotFoundException {
       ResponseEntity<FakeStoreProductDto> fakeStoreProductresponse =   restTemplate.getForEntity(
                 "https://fakestoreapi.com/products/" + productId,
                 FakeStoreProductDto.class
       );
 
         FakeStoreProductDto response = fakeStoreProductresponse.getBody();
+
+        if(response == null){
+            throw new  ProductNotFoundException("Product ID " + productId + " is not found");
+        }
         return response.toProduct();
     }
     @Override
