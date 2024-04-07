@@ -7,6 +7,8 @@ import com.haran.ecommerceapp.models.Category;
 import com.haran.ecommerceapp.models.Product;
 import com.haran.ecommerceapp.services.FakeStoreProductService;
 import com.haran.ecommerceapp.services.ProductService;
+import com.haran.ecommerceapp.services.SelfProductSerivce;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,61 +21,62 @@ import java.util.List;
 public class ProductController {
 
     private ProductService productService;
- //  private RestTemplate restTemplate;
 
-    public ProductController(ProductService productService,RestTemplate restTemplate){
+    public ProductController(@Qualifier("SelfProductService") ProductService productService){
         this.productService = productService;
-        //this.restTemplate = restTemplate;
     }
 
     @PostMapping("/products")
-    public Product createProduct(@RequestBody CreateProductRequestDto request){
+    public ResponseEntity<Product> createProduct(@RequestBody CreateProductRequestDto request) throws Exception {
 
-        return productService.createProduct(
+        Product product =  productService.createProduct(
                 request.getTitle(),
                 request.getDescription(),
                 request.getCategory(),
                 request.getPrice(),
                 request.getImage()
-
         );
+        return  new ResponseEntity<>(product,HttpStatus.OK);
     }
 
     @GetMapping("/products/{ID}")
-    public Product getProductDetails(@PathVariable("ID") Long ProductID) throws ProductNotFoundException {
-        return productService.getSingleProduct(ProductID);
+    public ResponseEntity<Product> getProductDetails(@PathVariable("ID") Long ProductID) throws ProductNotFoundException {
+        Product product =  productService.getSingleProduct(ProductID);
+        return new ResponseEntity<>(product,HttpStatus.OK);
     }
 
     @GetMapping("/products")
     public ResponseEntity<List<Product>> getAllProduct(){
-
         List<Product> products = productService.getProducts();
-
 //        throw new RuntimeException();
-        ResponseEntity<List<Product>> response = new ResponseEntity<>(products, HttpStatus.NOT_FOUND);
-       return response;
-
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @GetMapping("/category")
-    public List<Category> getAllCategory(){
-        return  productService.getAllCategory();
+    public ResponseEntity<List<Category>> getAllCategory(){
+
+        List<Category> categories = productService.getAllCategory();
+        return new ResponseEntity<>(categories,HttpStatus.OK);
     }
     @DeleteMapping("/products/{id}")
-    public void delete(@PathVariable("id") long id){
-            productService.deleteProduct(id);
+    public void delete(@PathVariable("id") long id)throws ProductNotFoundException{
+
+        productService.deleteProduct(id);
     }
     @PutMapping("/products/{id}")
-    public  Product updateProduct(@PathVariable("id") long id,
-                                  @RequestBody CreateProductRequestDto update){
-        return productService.updateProduct(id,
+    public  ResponseEntity<Product> updateProduct(@PathVariable("id") long id,
+                                  @RequestBody CreateProductRequestDto update) {
+        Product product =  productService.updateProduct(id,
                 update.getDescription(),update.getTitle(),update.getPrice(),
                 update.getImage(),update.getCategory());
 
+        return new ResponseEntity<>(product,HttpStatus.OK);
+
     }
-    @GetMapping("/products/category/{jew}")
-    public List<Product> getAllCategoryWiseProduct(@PathVariable("jew") String jew){
-            return productService.getAllCategoryWiseProduct(jew);
+    @GetMapping("/products/category/{category}")
+    public ResponseEntity<List<Product>> getAllCategoryWiseProduct(@PathVariable("category") String category) throws ProductNotFoundException{
+            List<Product> products =  productService.getAllCategoryWiseProduct(category);
+            return  new ResponseEntity<>(products,HttpStatus.OK);
     }
 
 //    @ExceptionHandler(ProductNotFoundException.class)

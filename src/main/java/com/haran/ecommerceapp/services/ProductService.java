@@ -11,10 +11,10 @@ public interface ProductService {
     Product getSingleProduct(Long productId) throws ProductNotFoundException;
     List<Product> getProducts();
     Product createProduct(String title,String description,String category,double price,
-                          String image);
+                          String image) throws Exception;
 
     List<Category> getAllCategory();
-   void deleteProduct(long id);
+   void deleteProduct(long id) throws ProductNotFoundException;
 
    Product updateProduct(long id,String desc,String title,double price,
                       String image,String category);

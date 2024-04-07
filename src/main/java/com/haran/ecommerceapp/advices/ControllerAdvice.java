@@ -17,4 +17,13 @@ public class ControllerAdvice {
 
         return new ResponseEntity<>(errorDTO, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorDTO> handleexception(Exception exception){
+
+        ErrorDTO errorDTO = new ErrorDTO();
+
+        errorDTO.setMessage(exception.getMessage());
+        return  new ResponseEntity<>(errorDTO,HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
