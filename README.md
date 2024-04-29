@@ -4,7 +4,7 @@ This is a sample project built on Spring Boot, following a microservices archite
 
 ## Features
 ### Product Catalog Services
-** CRUD operations for managing products.
+* CRUD operations for managing products.
  * Create a new product
  * List all products with details
  * Get single product details
