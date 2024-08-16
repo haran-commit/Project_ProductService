@@ -8,6 +8,7 @@ import com.haran.ecommerceapp.models.Product;
 import com.haran.ecommerceapp.services.FakeStoreProductService;
 import com.haran.ecommerceapp.services.ProductService;
 import com.haran.ecommerceapp.services.SelfProductSerivce;
+import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,9 +47,11 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getAllProduct(){
-        List<Product> products = productService.getProducts();
+    public ResponseEntity<Page<Product>> getAllProduct(@RequestParam("Pagenumber") int Pagenumber,
+                                                       @RequestParam("Pagesize") int Pagesize){
+        Page<Product> products = productService.getProducts(Pagenumber,Pagesize);
 //        throw new RuntimeException();
+
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

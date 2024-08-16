@@ -1,34 +1,36 @@
 package com.haran.ecommerceapp.Controllers;
 
 import com.haran.ecommerceapp.DTOs.InitiatePaymentRequestDto;
-import com.haran.ecommerceapp.DTOs.PaymentResponse;
-import com.haran.ecommerceapp.services.PaymentService;
+import com.haran.ecommerceapp.services.Payment.PaymentService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/payment")
 public class PaymentController {
 
    private PaymentService razorpayPaymentservice;
    private PaymentService stripePaymentservice;
 
     PaymentController(@Qualifier("razorpay") PaymentService razorpayPaymentservice,
-                      @Qualifier("stripe") PaymentService stripePaymentservice){
+                      PaymentService stripePaymentservice){
         this.razorpayPaymentservice = razorpayPaymentservice;
         this.stripePaymentservice = stripePaymentservice;
     }
 
-    @PostMapping("/payment")
+    @PostMapping("/")
     public String initiatePayment(@RequestBody InitiatePaymentRequestDto requestDto){
-       int paymentGatewayOption = choosePaymentGateway();
-       switch (paymentGatewayOption){
-           case 1 : return razorpayPaymentservice.doPayment(requestDto.getEmail(), requestDto.getPhoneNumber(), requestDto.getAmount(), requestDto.getOrderID());
-           case 2 : return stripePaymentservice.doPayment(requestDto.getEmail(), requestDto.getPhoneNumber(), requestDto.getAmount(), requestDto.getOrderID());
-       }
-
-        return null;
+        String payment = null;
+      try{
+          payment =  razorpayPaymentservice.doPayment(requestDto.getOrderID(),requestDto.getName(), requestDto.getAmount());
+      }
+      catch (Exception e){
+          System.out.println(e.getMessage());
+      }
+      return payment;
     }
 
 

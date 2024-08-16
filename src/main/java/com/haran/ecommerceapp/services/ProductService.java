@@ -3,13 +3,14 @@ package com.haran.ecommerceapp.services;
 import com.haran.ecommerceapp.Exceptions.ProductNotFoundException;
 import com.haran.ecommerceapp.models.Category;
 import com.haran.ecommerceapp.models.Product;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface ProductService {
 
     Product getSingleProduct(Long productId) throws ProductNotFoundException;
-    List<Product> getProducts();
+    Page<Product> getProducts(int PageNumber, int PageSize);
     Product createProduct(String title,String description,String category,double price,
                           String image) throws Exception;
 

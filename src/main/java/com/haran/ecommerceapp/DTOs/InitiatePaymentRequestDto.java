@@ -7,8 +7,9 @@ import lombok.Setter;
 @Setter
 public class InitiatePaymentRequestDto {
 
-    private String email;
-    private  String phoneNumber;
-    private long amount;
     private  String orderID;
+    private String name;
+
+    private long amount;
+
 }

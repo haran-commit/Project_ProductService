@@ -1,16 +1,14 @@
 package com.haran.ecommerceapp.services;
 
-import com.haran.ecommerceapp.DTOs.CreateProductRequestDto;
-import com.haran.ecommerceapp.DTOs.FakeStoreCategoryDto;
 import com.haran.ecommerceapp.DTOs.FakeStoreProductDto;
 import com.haran.ecommerceapp.Exceptions.ProductNotFoundException;
 import com.haran.ecommerceapp.models.Category;
 import com.haran.ecommerceapp.models.Product;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,18 +34,24 @@ public class FakeStoreProductService implements ProductService{
         }
         return response.toProduct();
     }
+
     @Override
-    public List<Product> getProducts() {
-        FakeStoreProductDto[] fakeStoreProductDto = restTemplate.getForObject(
-                "https://fakestoreapi.com/products",
-                FakeStoreProductDto[].class
-        );
-        List<Product> ans = new ArrayList<>();
-        for(FakeStoreProductDto fakeStoreProduct: fakeStoreProductDto){
-            ans.add(fakeStoreProduct.toProduct());
-        }
-        return ans;
+    public Page<Product> getProducts(int Pagenumber, int Pagesize) {
+        return null;
     }
+
+//    @Override
+//    public List<Product> getProducts() {
+//        FakeStoreProductDto[] fakeStoreProductDto = restTemplate.getForObject(
+//                "https://fakestoreapi.com/products",
+//                FakeStoreProductDto[].class
+//        );
+//        List<Product> ans = new ArrayList<>();
+//        for(FakeStoreProductDto fakeStoreProduct: fakeStoreProductDto){
+//            ans.add(fakeStoreProduct.toProduct());
+//        }
+//        return ans;
+//    }
 
     @Override
     public Product createProduct(

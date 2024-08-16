@@ -1,26 +1,27 @@
 package com.haran.ecommerceapp.services;
 
-import com.haran.ecommerceapp.Controllers.ProductController;
 import com.haran.ecommerceapp.Exceptions.ProductNotFoundException;
 import com.haran.ecommerceapp.models.Category;
 import com.haran.ecommerceapp.models.Product;
 import com.haran.ecommerceapp.repositories.CategoryRepository;
 import com.haran.ecommerceapp.repositories.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 @Service("SelfProductService")
 public class SelfProductSerivce implements ProductService{
-    @Autowired
+   // @Autowired
    private ProductRepository productRepository;
-    @Autowired
+    //@Autowired
    private CategoryRepository categoryRepository;
 
-//  public SelfProductSerivce(ProductRepository productRepository,CategoryRepository categoryRepository){
-//        this.productRepository = productRepository;
-//        this.categoryRepository = categoryRepository;
-//    }
+  public SelfProductSerivce(ProductRepository productRepository,CategoryRepository categoryRepository){
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+    }
     @Override
     public Product getSingleProduct(Long productId) throws ProductNotFoundException {
 
@@ -31,10 +32,13 @@ public class SelfProductSerivce implements ProductService{
         return product;
     }
 
-    @Override
-    public List<Product> getProducts() {
 
-      return productRepository.findAll();
+
+    @Override
+    public Page<Product> getProducts(int PageNumber,int pageSize) {
+
+      Page<Product> pages =  productRepository.findAll(PageRequest.of(PageNumber,pageSize));
+      return pages;
     }
 
     @Override
